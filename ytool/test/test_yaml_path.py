@@ -4,7 +4,6 @@ import pytest
 
 from collections import OrderedDict
 from ..ytool import YTool
-#from .ytool.ytool import ytool
 
 TEST_YAML = """\
 apiVersion: v1
