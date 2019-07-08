@@ -23,8 +23,8 @@ Help:
              [--set-float path value] [--output OUTPUT] [--edit-file]
              [--verbose]
 
-    Set values in yaml file
-    
+    Set values in yaml file preserving format and comments.
+
     optional arguments:
       -h, --help            show this help message and exit
       --file FILE, -f FILE  Name of the chart file to change
@@ -38,7 +38,7 @@ Help:
                             Name of output file
       --edit-file, -e       Edit input file directly
       --verbose, -v         Print debug information to stdout
-    
+
 
 ---------------
 What is Codacy?

@@ -1,0 +1,120 @@
+version: 2
+
+jobs:
+  checkout_and_version:
+    docker:
+      - image: codacy/git-version:1.0.7
+    working_directory: ~/workdir
+    steps:
+      - checkout
+      - run:
+          name: Set version
+          command: /bin/git-version > VERSION
+      - run:
+          name: Current version
+          command: cat VERSION
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - workdir
+
+  test:
+    docker:
+      - image: circleci/python:3.6
+    working_directory: ~/workdir
+    steps:
+      - attach_workspace:
+          at: ~/
+      - restore_cache:
+          key: v1-dependencies-{{ checksum "setup.py" }}
+      - run:
+          name: dependencies
+          command: |
+            python3 -m venv env
+            . env/bin/activate
+            python3 -m pip install --upgrade -r test_requirements.pip
+      - run:
+          name: test
+          command: |
+            . env/bin/activate
+            python3 -m pytest -v .
+      - save_cache:
+          paths:
+            - ./env
+          key: v1-dependencies-{{ checksum "setup.py" }}
+
+  deploy:
+    docker:
+      - image: circleci/python:3.6
+    working_directory: ~/workdir
+    steps:
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: create package files
+          command: |
+            python3 setup.py sdist bdist_wheel
+      - run:
+          name: create .pypirc file
+          command: |
+            echo -e "[pypi]" >> ~/.pypirc
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              echo -e "username = $PYPI_USERNAME" >> ~/.pypirc
+              echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
+            else
+              echo -e "repository = https://test.pypi.org/legacy/" >> ~/.pypirc
+              echo -e "username = $TEST_PYPI_USERNAME" >> ~/.pypirc
+              echo -e "password = $TEST_PYPI_PASSWORD" >> ~/.pypirc
+            fi
+      - run:
+          name: upload package to pypi server
+          command: |
+            python3 -m venv env
+            . env/bin/activate
+            pip install --upgrade twine
+            python -m twine upload dist/*
+      - save_cache:
+          paths:
+            - ./env
+          key: v1-dependencies-{{ checksum "setup.py" }}
+
+  tag_version:
+    docker:
+      - image: circleci/python:3.6
+    working_directory: ~/workdir
+    steps:
+    - attach_workspace:
+        at: ~/
+    - add_ssh_keys:
+        fingerprints:
+        - "df:83:d7:c7:d5:79:06:c2:3b:d1:fd:e2:a3:d1:12:c5"
+    - run:
+        name: add github known host
+        command: |
+          mkdir -p ~/.ssh
+          touch ~/.ssh/known_hosts
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+    - deploy:
+        name: Tag git repository
+        command: git tag $(cat VERSION) && git push --tags
+
+workflows:
+  version: 2
+
+  test_build_deploy:
+    jobs:
+      - checkout_and_version
+      - test:
+          requires:
+          - checkout_and_version
+      - deploy:
+          context: CodacyPyPi
+          requires:
+          - test
+          filters:
+            branches:
+              only:
+                - master
+      - tag_version:
+          requires:
+          - deploy
