@@ -6,6 +6,17 @@ A simple tool to set values in yaml files preserving format and comments.
 This command line tool is based on `ruamel.yaml <https://pypi.org/project/ruamel.yaml>`__
 
 ^^^^^^^^^^^^^^^^^^^^^^^^
+Install:
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Ytool can be installed simply by running:
+
+.. code-block:: bash
+
+    $ pip install ytool
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^
 Example:
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
