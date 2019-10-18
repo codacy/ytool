@@ -11,7 +11,7 @@ class YTool(YAML):
     def get_leaf_and_key(self, data, path, delimiter="."):
         """
         Find leaf in the yaml tree containing a key extracted from a path
-        For instance, when the yaml data is 
+        For instance, when the yaml data is
 
         ```
         this:
@@ -27,10 +27,10 @@ class YTool(YAML):
             data (OrderedDict): ruamel parsed yaml data
             path (str): path to key to search for
             delimiter (str): path delimiter. Default is '.'
-        
+
         returns:
             leaf, key (OrderedDict, str): the `leaf` in the yaml tree containing `key`
-        
+
         raises:
             KeyError: if any of the elements of the path is not a valid key in the corresponding yaml leaf
         """
@@ -51,6 +51,45 @@ class YTool(YAML):
         else:
             raise KeyError(f"Key '{last_key}' not found in '{leaf}'")
 
+    def set_path_by_value(self, data, path, searchKVPair, replaceKVPair):
+        """
+                Find leaf in the yaml tree containing a key-value pair extracted from a path
+                For instance, when the yaml data is
+
+                ```
+                this:
+                    nested:
+                        object1: value1
+                        object2: value2
+
+                this:
+                    nested:
+                    - key1: value1
+                      key2: value2
+                    - key1: value3
+                      key2: value4
+                ```
+                and this function is called with path=`this.nested (key1, value3) (key2, value4)` it returns
+                `OrderedDict([(key1, value3)`, (key2, value4)]) and `key2`
+
+
+                args:
+                    data (OrderedDict): ruamel parsed yaml data
+                    path (str): path to key to search for
+                    searchKVPair (tuple): the key and value pair for searching for an element
+                    replaceKVPair (tuple): the key and value pair with new values to replace on the element
+
+                returns:
+                    leaf, key (OrderedDict, str): the `leaf` in the yaml tree containing `key` if found.
+                    tree, key (OrderedDict, str): if the `leaf` could not be found.
+                """
+        tree, key = self.get_leaf_and_key(data, path)
+        for leaf in tree[key]:
+            if leaf[searchKVPair[0]] == searchKVPair[1]:
+                leaf[replaceKVPair[0]] = replaceKVPair[1]
+                return leaf, replaceKVPair[0]
+
+        return tree, key
 
     def set_path_value(self, data, path, value, delimiter="."):
         """
@@ -65,7 +104,6 @@ class YTool(YAML):
         leaf, key = self.get_leaf_and_key(data, path, delimiter)
         leaf[key] = value
 
-    
     def dump(self, data, stream=None, **kw):
         """
         Wrapper around the ruamel dump function which writes to a
