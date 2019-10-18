@@ -10,7 +10,7 @@ parser.add_argument("--file", "-f", action="store",
     help="Name of the chart file to change", required=True)
 parser.add_argument("--set-string", "-s", action='append', nargs=2, default=list(),
     metavar=('path', 'value'), help='Set string value for path')
-parser.add_argument("--set-string-keyvalue", "-skv", action='append', nargs=5, default=list(),
+parser.add_argument("--set-string-keyvalue", "-k", action='append', nargs=5, default=list(),
     metavar=('path', 'search_key', 'search_value', 'new_key', 'value'), help='Set string value for path, searching by key value pair')
 parser.add_argument("--set-int", "-i", action='append', nargs=2, default=list(),
     metavar=('path', 'value'), help='Set integer value for path')
