@@ -10,6 +10,8 @@ parser.add_argument("--file", "-f", action="store",
     help="Name of the chart file to change", required=True)
 parser.add_argument("--set-string", "-s", action='append', nargs=2, default=list(),
     metavar=('path', 'value'), help='Set string value for path')
+parser.add_argument("--set-string-value", "-sv", action='append', nargs=5, default=list(),
+    metavar=('path', 'search_key', 'search_value', 'new_key', 'value'), help='Set string value for path, searching by key value pair')
 parser.add_argument("--set-int", "-i", action='append', nargs=2, default=list(),
     metavar=('path', 'value'), help='Set integer value for path')
 parser.add_argument("--set-float", "-d", action='append', nargs=2, default=list(),
@@ -33,6 +35,10 @@ with open(args.file) as file:
 
     for item in args.set_string:
         ytool.set_path_value(data, item[0], item[1])
+
+    for item in args.set_string_value:
+        ytool.set_path_by_value(data, item[0], item[1], item[2], item[3], item[4])
+
 
     for item in args.set_int:
         ytool.set_path_value(data, item[0], int(item[1]))
