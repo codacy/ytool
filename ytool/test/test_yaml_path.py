@@ -51,15 +51,19 @@ def populate_yaml(source_yaml):
 def set_path_by_value_can_replace_value_on_same_search_kvpair():
 	data, parser = populate_yaml(NESTED_TEST_YAML)
 	leaf, key = parser.set_path_by_value(data, "dependencies", ("name", "core"), ("name", "core-io"))
-	assert leaf == OrderedDict([('name', 'core-io'), ('version', "~2.8.2"), ('repository', 'https://charts.codacy.com/stable')])
-	assert key == "name"
+	if not leaf == OrderedDict([('name', 'core-io'), ('version', "~2.8.2"), ('repository', 'https://charts.codacy.com/stable')]):
+		raise AssertionError()
+	if not key == "name":
+		raise AssertionError()
 
 
 def test_set_can_replace_value_on_different_kvpair():
 	data, parser = populate_yaml(NESTED_TEST_YAML)
 	leaf, key = parser.set_path_by_value(data, "dependencies", ("name", "core"), ("version", "~3.0.0"))
-	assert leaf == OrderedDict([('name', 'core'), ('version', "~3.0.0"), ('repository', 'https://charts.codacy.com/stable')])
-	assert key == "version"
+	if not leaf == OrderedDict([('name', 'core'), ('version', "~3.0.0"), ('repository', 'https://charts.codacy.com/stable')]):
+		raise AssertionError()
+	if not key == "version":
+		raise AssertionError()
 
 
 def test_get_leaf_and_key_for_non_nested_element():
