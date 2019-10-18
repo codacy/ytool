@@ -36,7 +36,7 @@ with open(args.file) as file:
     for item in args.set_string:
         ytool.set_path_value(data, item[0], item[1])
 
-    for item in args.set_string_value:
+    for item in args.set_string_keyvalue:
         ytool.set_path_by_value(data, item[0], item[1], item[2], item[3], item[4])
 
 
