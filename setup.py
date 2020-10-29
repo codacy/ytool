@@ -11,7 +11,7 @@ def read(*parts):
 
 setup(
     name='ytool',
-    version=open('VERSION').read(),
+    version=open('.version').read(),
     description='A simple tool to set values in yaml files preserving format and comments',
     long_description=open('README.rst').read(),
     url='https://github.com/codacy/ytool',
