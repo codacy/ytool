@@ -3,7 +3,7 @@ import codecs
 
 from setuptools import setup, find_packages
 
-dependencies = ['ruamel.yaml==0.15.97']
+dependencies = ['ruamel.yaml==0.16.12']
 
 def read(*parts):
     return codecs.open(os.path.join(here, *parts), 'r').read()
