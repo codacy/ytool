@@ -3,7 +3,7 @@ import codecs
 
 from setuptools import setup, find_packages
 
-dependencies = ['ruamel.yaml==0.15.97']
+dependencies = ['ruamel.yaml==0.16.12']
 
 def read(*parts):
     return codecs.open(os.path.join(here, *parts), 'r').read()
@@ -11,7 +11,7 @@ def read(*parts):
 
 setup(
     name='ytool',
-    version=open('VERSION').read(),
+    version=open('.version').read(),
     description='A simple tool to set values in yaml files preserving format and comments',
     long_description=open('README.rst').read(),
     url='https://github.com/codacy/ytool',
