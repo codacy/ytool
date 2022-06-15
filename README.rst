@@ -24,6 +24,17 @@ Example:
 
     $ ytool -f some.yaml -s some.string.key value -d float_key 9.9  -i int.key.path 10
 
+
+The output format can be specified to match an existing file:
+
+
+.. code-block:: bash
+
+    $ ytool -f some.yaml -s some.string.key value \
+        --format-width 150 \
+        --format-ident "{mapping: 2, sequence: 4, offset: 2}"
+
+
 ^^^^^^^^^^^^^^^^^^^^^^^^
 Help:
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -31,8 +42,8 @@ Help:
 .. code-block:: bash
 
     $ usage: ytool [-h] --file FILE [--set-string path value] [--set-int path value]
-             [--set-float path value] [--output OUTPUT] [--edit-file]
-             [--verbose]
+             [--set-float path value] [--output OUTPUT] [--edit-file] [--verbose]
+             [--format-explicit-start] [--format-width WIDTH] [--format-indent INDENT]
 
     Set values in yaml file preserving format and comments.
 
@@ -49,6 +60,12 @@ Help:
                             Name of output file
       --edit-file, -e       Edit input file directly
       --verbose, -v         Print debug information to stdout
+      --format-explicit-start, -x
+                            Set explicit start
+      --format-width WIDTH, -w WIDTH
+                            Set max width for output
+      --format-indent INDENT, -m INDENT
+                            Set indent format, eg. "{mapping: 2, sequence: 4, offset: 2}"
 
 
 ---------------
